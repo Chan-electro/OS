@@ -1,0 +1,17 @@
+# Node dependencies
+node_modules/
+
+# Local environment variables
+.env
+
+# SQLite database files
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# macOS specific files
+.DS_Store
+
+# Tooling and IDE files
+.omc/
+.remember/
