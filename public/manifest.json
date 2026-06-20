@@ -1,0 +1,22 @@
+{
+  "short_name": "AdGrades OS",
+  "name": "AdGrades Company and Life OS Portal",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090a0f",
+  "theme_color": "#0d0e15",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/"
+}
