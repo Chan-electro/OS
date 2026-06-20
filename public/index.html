@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdGrades OS</title>
+  <meta name="description" content="AdGrades OS - Minimalist Monochrome Portal">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="hidden">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <span class="logo-text">ADGRADES <span class="logo-sub">OS</span></span>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-link active" id="nav-dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#tasks" class="nav-link" id="nav-tasks">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Tasks</span>
+        </a>
+        <a href="#projects" class="nav-link" id="nav-projects">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span>Projects</span>
+        </a>
+        <a href="#clients" class="nav-link" id="nav-clients">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Clients</span>
+        </a>
+        <a href="#content" class="nav-link" id="nav-content">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Content Cal</span>
+        </a>
+        <a href="#team" class="nav-link hidden" id="nav-team">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <span>Team Setup</span>
+        </a>
+        <a href="#life" class="nav-link hidden" id="nav-life">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>Life OS</span>
+        </a>
+        <a href="#calendar" class="nav-link" id="nav-calendar">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Calendar</span>
+        </a>
+        <a href="#clock" class="nav-link" id="nav-clock">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>IST Clock</span>
+        </a>
+        <a href="#timer" class="nav-link" id="nav-timer">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 14 15"/><path d="M9 2h6"/><path d="M12 2v3"/></svg>
+          <span>Timer</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-badge" id="user-profile-badge">
+          <div class="user-avatar" id="user-avatar-char">C</div>
+          <div class="user-info">
+            <span class="user-name" id="profile-name">Chandan</span>
+            <span class="user-role" id="profile-role">Admin</span>
+          </div>
+        </div>
+        <button id="btn-logout" class="btn-logout" title="Log Out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Loading screen -->
+      <div id="loading-view" class="view">
+        <div class="spinner-container">
+          <div class="neon-spinner"></div>
+          <p class="loading-text">Synchronizing AdGrades OS...</p>
+        </div>
+      </div>
+
+      <!-- Login View -->
+      <div id="login-view" class="view hidden">
+        <div class="login-wrapper">
+          <div class="login-card glassmorphic">
+            <div class="login-header">
+              <div class="logo-container large">
+                <span class="logo-text">ADGRADES <span class="logo-sub">OS</span></span>
+              </div>
+              <p class="login-subtitle">LAN Operations Portal</p>
+            </div>
+            
+            <form id="login-form">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter username">
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter password">
+              </div>
+              <div id="login-error" class="form-error-msg hidden"></div>
+              
+              <button type="submit" class="btn-submit">
+                <span>Access Dashboard</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Workspace Views -->
+      <div id="content-view" class="view hidden">
+        
+        <!-- Dashboard Screen -->
+        <section id="dashboard-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Greetings, <span id="welcome-name">Chandan</span></h1>
+              <p class="welcome-subtitle">Workspace summary for today.</p>
+            </div>
+            <div id="quick-action-strip"></div>
+          </header>
+          
+          <div class="stats-grid">
+            <div class="stat-card glassmorphic border-todo">
+              <div class="stat-icon icon-todo">T</div>
+              <div class="stat-info">
+                <span class="stat-label">To Do</span>
+                <span class="stat-val" id="stat-todo">0</span>
+              </div>
+            </div>
+            <div class="stat-card glassmorphic border-progress">
+              <div class="stat-icon icon-progress">P</div>
+              <div class="stat-info">
+                <span class="stat-label">In Progress</span>
+                <span class="stat-val" id="stat-progress">0</span>
+              </div>
+            </div>
+            <div class="stat-card glassmorphic border-review">
+              <div class="stat-icon icon-review">R</div>
+              <div class="stat-info">
+                <span class="stat-label">Awaiting Approval</span>
+                <span class="stat-val" id="stat-review">0</span>
+              </div>
+            </div>
+            <div class="stat-card glassmorphic border-done">
+              <div class="stat-icon icon-done">D</div>
+              <div class="stat-info">
+                <span class="stat-label">Completed</span>
+                <span class="stat-val" id="stat-done">0</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Analytics Row -->
+          <div class="analytics-row">
+            <div class="card-section glassmorphic">
+              <h3 class="section-title">Task Status Distribution</h3>
+              <div id="chart-status-distribution"><div class="empty-message">Loading...</div></div>
+            </div>
+            <div class="card-section glassmorphic">
+              <h3 class="section-title">Priority Breakdown</h3>
+              <div id="chart-priority-breakdown"><div class="empty-message">Loading...</div></div>
+            </div>
+          </div>
+
+          <div class="dashboard-layouts">
+            <div class="dashboard-main-col">
+              <!-- Overdue Section -->
+              <div class="card-section glassmorphic border-glow-red hidden" id="section-overdue">
+                <h3 class="section-title text-red">
+                  <span class="pulse-indicator"></span> Overdue Tasks
+                </h3>
+                <div class="task-compact-list" id="list-overdue"></div>
+              </div>
+              <!-- Today Section -->
+              <div class="card-section glassmorphic">
+                <h3 class="section-title">Due Today</h3>
+                <div class="task-compact-list" id="list-today"></div>
+              </div>
+              <!-- Upcoming Section -->
+              <div class="card-section glassmorphic">
+                <h3 class="section-title">Due Next 7 Days</h3>
+                <div class="task-compact-list" id="list-upcoming"></div>
+              </div>
+            </div>
+            
+            <div class="dashboard-side-col">
+              <!-- Awaiting Approval (Admin/Manager) -->
+              <div class="card-section glassmorphic hidden" id="widget-approval">
+                <h3 class="section-title">Awaiting Approval</h3>
+                <div class="approval-list" id="list-approval"></div>
+              </div>
+              <!-- Renewals (Admin/Manager) -->
+              <div class="card-section glassmorphic hidden" id="widget-renewals">
+                <h3 class="section-title">Renewals (14 Days)</h3>
+                <div class="renewals-list" id="list-renewals"></div>
+              </div>
+              <!-- Life OS Strip (Admin) -->
+              <div class="card-section glassmorphic hidden" id="widget-life-strip">
+                <h3 class="section-title flex-between">
+                  <span>Life OS Summary</span>
+                  <a href="#life" class="badge badge-life">Workspace</a>
+                </h3>
+                <div id="life-dashboard-strip-habits" style="display:flex; flex-direction:column; gap:8px;">
+                  <!-- Habit quick toggles -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tasks Screen -->
+        <section id="tasks-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Task Workspace</h1>
+              <p class="welcome-subtitle">Create, assign, filter and manage operations.</p>
+            </div>
+            <div>
+              <button id="btn-create-task" class="btn-primary hidden">New Task</button>
+            </div>
+          </header>
+
+          <div class="workspace-filters glassmorphic">
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-task-status">
+                <option value="">All</option>
+                <option value="todo">To Do</option>
+                <option value="in_progress">In Progress</option>
+                <option value="in_review">In Review</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Priority</label>
+              <select id="filter-task-priority">
+                <option value="">All</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Client</label>
+              <select id="filter-task-client">
+                <option value="">All</option>
+              </select>
+            </div>
+            <div class="filter-group" id="filter-assignee-container">
+              <label>Assignee</label>
+              <select id="filter-task-assignee">
+                <option value="">All</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card-section glassmorphic">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Client</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Assignee</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tasks-table-body"></tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="tasks-pagination"></div>
+          </div>
+        </section>
+
+        <!-- Projects Screen -->
+        <section id="projects-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Client Projects</h1>
+              <p class="welcome-subtitle">Track project scope, retainers, and dates.</p>
+            </div>
+            <div>
+              <button id="btn-create-project" class="btn-primary hidden">New Project</button>
+            </div>
+          </header>
+
+          <div class="workspace-filters glassmorphic">
+            <div class="filter-group">
+              <label>Client Filter</label>
+              <select id="filter-project-client">
+                <option value="">All Clients</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-project-status">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card-section glassmorphic">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Project Name</th>
+                    <th>Client Name</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>Renewal Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="projects-table-body"></tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="projects-pagination"></div>
+          </div>
+        </section>
+
+        <!-- Clients Screen -->
+        <section id="clients-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Client Directory</h1>
+              <p class="welcome-subtitle">Profiles, retainers and contacts ledger.</p>
+            </div>
+            <div>
+              <button id="btn-create-client" class="btn-primary hidden">New Client</button>
+            </div>
+          </header>
+
+          <div class="workspace-filters glassmorphic">
+            <div class="filter-group search-filter">
+              <label>Search Directory</label>
+              <input type="text" id="filter-client-search" placeholder="Search client index...">
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-client-status">
+                <option value="">All</option>
+                <option value="lead">Lead</option>
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="churned">Churned</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="clients-grid" id="clients-grid-container"></div>
+          <div class="pagination-container" id="clients-pagination"></div>
+        </section>
+
+        <!-- Content Calendar Screen -->
+        <section id="content-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Content Calendar</h1>
+              <p class="welcome-subtitle">Manage client social posts schedules.</p>
+            </div>
+            <div>
+              <button id="btn-create-content" class="btn-primary hidden">Schedule Post</button>
+            </div>
+          </header>
+
+          <div class="workspace-filters glassmorphic">
+            <div class="filter-group">
+              <label>Client</label>
+              <select id="filter-content-client">
+                <option value="">All</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-content-status">
+                <option value="">All</option>
+                <option value="idea">Idea</option>
+                <option value="draft">Draft</option>
+                <option value="in_review">In Review</option>
+                <option value="approved">Approved</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card-section glassmorphic">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Scheduled Date</th>
+                    <th>Client</th>
+                    <th>Content Topic</th>
+                    <th>Platform</th>
+                    <th>Type</th>
+                    <th>Assignee</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="content-table-body"></tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="content-pagination"></div>
+          </div>
+        </section>
+
+        <!-- Team Setup Screen (Admin only) -->
+        <section id="team-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Team Configuration</h1>
+              <p class="welcome-subtitle">Manage personnel access credentials.</p>
+            </div>
+            <div>
+              <button id="btn-create-user" class="btn-primary">New User</button>
+            </div>
+          </header>
+
+          <div class="card-section glassmorphic">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Display Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Telegram Chat ID</th>
+                    <th>Access Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="team-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Life OS Screen (Admin only) -->
+        <section id="life-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Life OS Workspace</h1>
+              <p class="welcome-subtitle">Founder productivity environment. Restricted access.</p>
+            </div>
+          </header>
+
+          <div class="dashboard-layouts">
+            <!-- Left OS Column: Habits & Health -->
+            <div class="dashboard-main-col">
+              <!-- Habits Widget -->
+              <div class="card-section glassmorphic">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                  <h3 class="section-title" style="margin-bottom: 0;">Habits Ledger</h3>
+                  <button id="btn-create-habit" class="btn-primary">Add Habit</button>
+                </div>
+                <div class="life-habits-container" id="life-habits-list"></div>
+              </div>
+
+              <!-- Health Log Widget -->
+              <div class="card-section glassmorphic">
+                <h3 class="section-title">Health Logger</h3>
+                <form id="life-health-form" style="display:grid; grid-template-columns: 2fr 2fr 3fr 1fr; gap:10px; margin-bottom: 15px;">
+                  <select id="health-type" required>
+                    <option value="workout">Workout</option>
+                    <option value="sleep">Sleep</option>
+                    <option value="break">Break Nudge</option>
+                    <option value="weight">Weight (kg)</option>
+                    <option value="water">Water (ml)</option>
+                  </select>
+                  <input type="text" id="health-value" required placeholder="Log Value (e.g. 8hrs, 72kg)">
+                  <input type="text" id="health-note" placeholder="Optional Notes">
+                  <button type="submit" class="btn-primary">Log</button>
+                </form>
+                <div class="table-container">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Note</th>
+                      </tr>
+                    </thead>
+                    <tbody id="health-logs-body"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right OS Column: Finance Ledgers -->
+            <div class="dashboard-side-col">
+              <!-- Finance Widget -->
+              <div class="card-section glassmorphic">
+                <h3 class="section-title">Finance Summary</h3>
+                <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+                  <input type="month" id="finance-summary-month" style="width: 140px;">
+                  <button id="btn-create-finance" class="btn-primary">Add Transaction</button>
+                </div>
+                <div class="stat-card" style="margin-bottom:15px; display:block;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <span>Total Income:</span> <span id="summary-income" style="font-weight:700;">INR 0</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <span>Total Expenses:</span> <span id="summary-expense" style="font-weight:700;">INR 0</span>
+                  </div>
+                  <hr style="border:0; border-top: 1px solid var(--border-color); margin: 6px 0;">
+                  <div style="display:flex; justify-content:space-between; font-weight:700;">
+                    <span>Net Savings:</span> <span id="summary-net">INR 0</span>
+                  </div>
+                </div>
+                
+                <h4 class="section-title" style="font-size:12px; margin-bottom:8px;">Breakdown</h4>
+                <div id="finance-breakdown" style="font-size:12px; margin-bottom:15px; display:flex; flex-direction:column; gap:4px;"></div>
+                
+                <h4 class="section-title" style="font-size:12px; margin-bottom:8px;">Ledger History</h4>
+                <div class="table-container">
+                  <table class="data-table" style="font-size: 11px;">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Kind</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="finance-ledger-body"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-layouts">
+            <!-- Learning Track & Journaling -->
+            <div class="dashboard-main-col">
+              <!-- Learning Tracker -->
+              <div class="card-section glassmorphic">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                  <h3 class="section-title" style="margin-bottom:0;">Learning Track</h3>
+                  <button id="btn-create-learning" class="btn-primary">Add course</button>
+                </div>
+                <div class="table-container">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Topic</th>
+                        <th>Source</th>
+                        <th>Hours</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="learning-tracker-body"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Journal Widget -->
+              <div class="card-section glassmorphic">
+                <h3 class="section-title">Founder Journal</h3>
+                <form id="life-journal-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 15px;">
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="date" id="journal-date" required>
+                    <input type="text" id="journal-mood" placeholder="Mood tag (e.g. focused, tired)">
+                  </div>
+                  <textarea id="journal-body" required placeholder="Write today's entries..."></textarea>
+                  <button type="submit" class="btn-primary" style="align-self: flex-end;">Save Entry</button>
+                </form>
+                <div id="journal-entries-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+              </div>
+            </div>
+
+            <!-- Content Pipeline & Events Calendar -->
+            <div class="dashboard-side-col">
+              <!-- Content Ideas pipeline -->
+              <div class="card-section glassmorphic">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                  <h3 class="section-title" style="margin-bottom: 0;">Content Pipeline</h3>
+                  <button id="btn-create-idea" class="btn-primary">New Idea</button>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;" id="content-ideas-list"></div>
+              </div>
+
+              <!-- Personal Calendar Events -->
+              <div class="card-section glassmorphic">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                  <h3 class="section-title" style="margin-bottom:0;">Events Agenda</h3>
+                  <button id="btn-create-event" class="btn-primary">Add Event</button>
+                </div>
+                <div class="table-container">
+                  <table class="data-table" style="font-size:11px;">
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Event</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="calendar-events-body"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Calendar Screen -->
+        <section id="calendar-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Task Calendar</h1>
+              <p class="welcome-subtitle">Monthly view — click a date to see tasks due.</p>
+            </div>
+            <div class="cal-nav">
+              <button id="cal-prev" class="btn-cancel">&#8592; Prev</button>
+              <span id="cal-month-label" class="cal-month-label"></span>
+              <button id="cal-next" class="btn-cancel">Next &#8594;</button>
+            </div>
+          </header>
+          <div class="cal-grid-wrap">
+            <div class="cal-grid" id="cal-header-row">
+              <div class="cal-header-cell">Sun</div>
+              <div class="cal-header-cell">Mon</div>
+              <div class="cal-header-cell">Tue</div>
+              <div class="cal-header-cell">Wed</div>
+              <div class="cal-header-cell">Thu</div>
+              <div class="cal-header-cell">Fri</div>
+              <div class="cal-header-cell">Sat</div>
+            </div>
+            <div class="cal-grid" id="cal-days-grid"></div>
+          </div>
+          <div id="cal-day-panel" class="cal-day-panel hidden">
+            <div id="cal-day-title"></div>
+            <div id="cal-day-tasks"></div>
+          </div>
+        </section>
+
+        <!-- IST Clock Screen -->
+        <section id="clock-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">IST Clock</h1>
+              <p class="welcome-subtitle">Indian Standard Time — UTC +5:30</p>
+            </div>
+          </header>
+          <div class="clock-wrapper">
+            <div class="clock-greeting" id="clock-greeting">Good Morning</div>
+            <div class="clock-time" id="clock-display">00:00:00</div>
+            <div class="clock-date" id="clock-date"></div>
+            <div class="clock-badge">IST &bull; Asia/Kolkata &bull; UTC +05:30</div>
+            <div class="clock-stats-row" id="clock-stats-row"></div>
+          </div>
+        </section>
+
+        <!-- Timer Screen -->
+        <section id="timer-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Task Timer</h1>
+              <p class="welcome-subtitle">Track focused time on any task.</p>
+            </div>
+            <button class="btn-cancel" onclick="resetTimer()">Reset &amp; Log</button>
+          </header>
+          <div class="timer-wrapper">
+            <div class="card-section glassmorphic timer-center">
+              <div class="form-group">
+                <label>Link to Task</label>
+                <select id="timer-task-dropdown"></select>
+              </div>
+              <div class="timer-task-name" id="timer-task-name">No task selected</div>
+              <div class="timer-display" id="timer-display">00:00:00</div>
+              <div class="timer-controls">
+                <button id="btn-timer-start" class="btn-primary" onclick="startTimer()">&#9654; Start</button>
+                <button id="btn-timer-pause" class="btn-cancel" onclick="pauseTimer()">&#10074;&#10074; Pause</button>
+                <button class="btn-cancel" onclick="resetTimer()">&#9724; Stop &amp; Log</button>
+              </div>
+            </div>
+            <div class="card-section glassmorphic">
+              <h3 class="section-title">Session Log</h3>
+              <div id="timer-log-list"><div class="empty-message">No sessions yet.</div></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- --- MODALS --- -->
+  
+  <!-- Project Modal -->
+  <div id="modal-project" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="project-modal-title">Create Project</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="project-form">
+          <input type="hidden" id="project-form-id" name="id">
+          <div class="form-group">
+            <label for="project-name">Project Name *</label>
+            <input type="text" id="project-name" name="name" required placeholder="Enter project title">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="project-client">Client *</label>
+              <select id="project-client" name="client_id" required></select>
+            </div>
+            <div class="form-group">
+              <label for="project-type">Engagement Type *</label>
+              <select id="project-type" name="type" required>
+                <option value="retainer">Retainer</option>
+                <option value="one_off">One Off</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="project-status">Status *</label>
+              <select id="project-status" name="status" required>
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="project-start-date">Start Date</label>
+              <input type="date" id="project-start-date" name="start_date">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="project-renewal">Renewal Date</label>
+            <input type="date" id="project-renewal" name="renewal_date">
+          </div>
+          <div class="form-group">
+            <label for="project-notes">Notes</label>
+            <textarea id="project-notes" name="notes"></textarea>
+          </div>
+          <div class="form-error-msg hidden" id="project-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Project</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Schedule Modal -->
+  <div id="modal-content-item" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="content-modal-title">Schedule Post</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="content-form">
+          <input type="hidden" id="content-form-id" name="id">
+          <div class="form-group">
+            <label for="content-title">Content Title *</label>
+            <input type="text" id="content-title" name="title" required placeholder="Enter content topic">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="content-client">Client *</label>
+              <select id="content-client" name="client_id" required></select>
+            </div>
+            <div class="form-group">
+              <label for="content-assignee">Assignee</label>
+              <select id="content-assignee" name="assignee_id"></select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="content-platform">Platform</label>
+              <input type="text" id="content-platform" name="platform" placeholder="instagram, linkedin...">
+            </div>
+            <div class="form-group">
+              <label for="content-type">Type</label>
+              <input type="text" id="content-type-field" name="content_type" placeholder="post, reel, blog...">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="content-status">Status *</label>
+              <select id="content-status" name="status" required>
+                <option value="idea">Idea</option>
+                <option value="draft">Draft</option>
+                <option value="in_review">In Review</option>
+                <option value="approved">Approved</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="content-scheduled-date">Scheduled Date</label>
+              <input type="date" id="content-scheduled-date" name="scheduled_date">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="content-notes">Notes</label>
+            <textarea id="content-notes" name="notes"></textarea>
+          </div>
+          <div class="form-error-msg hidden" id="content-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Post</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Habit Modal -->
+  <div id="modal-habit" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2>Create Habit</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="habit-form">
+          <div class="form-group">
+            <label for="habit-name">Habit Name *</label>
+            <input type="text" id="habit-name" name="name" required placeholder="e.g. Workout, Drink water">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="habit-cadence">Cadence *</label>
+              <select id="habit-cadence" name="cadence" required>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="habit-target">Target count *</label>
+              <input type="number" id="habit-target" name="target_per_period" min="1" value="1" required>
+            </div>
+          </div>
+          <div class="form-error-msg hidden" id="habit-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Habit</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Finance Modal -->
+  <div id="modal-finance" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2>Log Transaction</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="finance-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fin-kind">Type *</label>
+              <select id="fin-kind" name="kind" required>
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fin-date">Date *</label>
+              <input type="date" id="fin-date" name="entry_date" required>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fin-amount">Amount (INR) *</label>
+              <input type="number" id="fin-amount" name="amount" min="0.01" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label for="fin-category">Category</label>
+              <input type="text" id="fin-category" name="category" placeholder="e.g. food, rent, client">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="fin-note">Note</label>
+            <input type="text" id="fin-note" name="note" placeholder="Notes details">
+          </div>
+          <div class="form-error-msg hidden" id="finance-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Log</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Learning Modal -->
+  <div id="modal-learning" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="learning-modal-title">Log Course</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="learning-form">
+          <input type="hidden" id="learning-form-id" name="id">
+          <div class="form-group">
+            <label for="learning-title">Course/Topic *</label>
+            <input type="text" id="learning-title" name="title" required placeholder="Title">
+          </div>
+          <div class="form-group">
+            <label for="learning-source">Source</label>
+            <input type="text" id="learning-source" name="source" placeholder="e.g. Coursera, Books">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="learning-status">Status *</label>
+              <select id="learning-status" name="status" required>
+                <option value="to_learn">To Learn</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Completed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="learning-hours">Hours spent</label>
+              <input type="number" id="learning-hours" name="hours" min="0" step="0.1" value="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="learning-notes">Notes</label>
+            <textarea id="learning-notes" name="notes"></textarea>
+          </div>
+          <div class="form-error-msg hidden" id="learning-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Idea Modal -->
+  <div id="modal-idea" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="idea-modal-title">Log Content Idea</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="idea-form">
+          <input type="hidden" id="idea-form-id" name="id">
+          <div class="form-group">
+            <label for="idea-text">Content Idea *</label>
+            <input type="text" id="idea-text" name="idea" required placeholder="Brief concept">
+          </div>
+          <div class="form-group">
+            <label for="idea-hook">Hook</label>
+            <input type="text" id="idea-hook" name="hook" placeholder="The first 3 seconds statement">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="idea-platform">Platform</label>
+              <input type="text" id="idea-platform" name="platform" placeholder="linkedin, youtube...">
+            </div>
+            <div class="form-group">
+              <label for="idea-status">Pipeline Status *</label>
+              <select id="idea-status" name="status" required>
+                <option value="idea">Idea</option>
+                <option value="drafting">Drafting</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="posted">Posted</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="idea-date">Scheduled date</label>
+            <input type="date" id="idea-date" name="scheduled_date">
+          </div>
+          <div class="form-error-msg hidden" id="idea-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Idea</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Modal -->
+  <div id="modal-event" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="event-modal-title">Create Calendar Event</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="event-form">
+          <input type="hidden" id="event-form-id" name="id">
+          <div class="form-group">
+            <label for="event-title">Event Title *</label>
+            <input type="text" id="event-title" name="title" required placeholder="Event name">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="event-start">Start Time *</label>
+              <input type="datetime-local" id="event-start" name="start_at" required>
+            </div>
+            <div class="form-group">
+              <label for="event-end">End Time</label>
+              <input type="datetime-local" id="event-end" name="end_at">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="event-type">Category/Tag</label>
+              <input type="text" id="event-type" name="type" placeholder="e.g. meeting, personal">
+            </div>
+            <div class="form-group checkbox-group" style="align-self:center;">
+              <label class="toggle-switch">
+                <input type="checkbox" id="event-allday" name="all_day">
+              </label>
+              <span class="checkbox-label">All day event</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="event-note">Note</label>
+            <input type="text" id="event-note" name="note" placeholder="Notes">
+          </div>
+          <div class="form-error-msg hidden" id="event-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Event</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Modal (Modified) -->
+  <div id="modal-task" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="task-modal-title">Create Task</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="task-form">
+          <input type="hidden" id="task-form-id" name="id">
+          <div class="form-group">
+            <label for="task-title">Title *</label>
+            <input type="text" id="task-title" name="title" required placeholder="Enter task title">
+          </div>
+          <div class="form-group">
+            <label for="task-description">Description</label>
+            <textarea id="task-description" name="description"></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="task-client">Client</label>
+              <select id="task-client" name="client_id"></select>
+            </div>
+            <div class="form-group">
+              <label for="task-project">Project</label>
+              <select id="task-project" name="project_id">
+                <option value="">No Project</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="task-assignee">Assignee</label>
+              <select id="task-assignee" name="assignee_id"></select>
+            </div>
+            <div class="form-group">
+              <label for="task-priority">Priority *</label>
+              <select id="task-priority" name="priority" required>
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="task-due-date">Due Date</label>
+              <input type="date" id="task-due-date" name="due_date">
+            </div>
+            <div class="form-group checkbox-group" style="align-self:center;">
+              <label class="toggle-switch">
+                <input type="checkbox" id="task-needs-approval" name="needs_approval">
+              </label>
+              <span class="checkbox-label">Requires approval</span>
+            </div>
+          </div>
+          
+          <!-- Recurrence Settings -->
+          <div class="form-grid" style="border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px;">
+            <div class="form-group">
+              <label for="task-recurrence">Recurrence</label>
+              <select id="task-recurrence" name="recurrence">
+                <option value="">No Recurrence</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="task-recurrence-interval">Interval</label>
+              <input type="number" id="task-recurrence-interval" name="recurrence_interval" min="1" value="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="task-recurrence-until">Recur Until Date</label>
+            <input type="date" id="task-recurrence-until" name="recurrence_until">
+          </div>
+
+          <div class="form-error-msg hidden" id="task-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Task</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Modal -->
+  <div id="modal-client" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="client-modal-title">Create Client</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="client-form">
+          <input type="hidden" id="client-form-id" name="id">
+          <div class="form-group">
+            <label for="client-name">Brand Name *</label>
+            <input type="text" id="client-name" name="name" required placeholder="Enter client brand name">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="client-industry">Industry</label>
+              <input type="text" id="client-industry" name="industry" placeholder="e.g. F&B, Tech">
+            </div>
+            <div class="form-group">
+              <label for="client-status">Status *</label>
+              <select id="client-status" name="status" required>
+                <option value="lead">Lead</option>
+                <option value="active" selected>Active</option>
+                <option value="paused">Paused</option>
+                <option value="churned">Churned</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="client-contact-name">Primary Contact</label>
+              <input type="text" id="client-contact-name" name="contact_name" placeholder="Contact person">
+            </div>
+            <div class="form-group">
+              <label for="client-contact-email">Email</label>
+              <input type="email" id="client-contact-email" name="contact_email" placeholder="client@brand.com">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="client-contact-phone">Phone</label>
+              <input type="text" id="client-contact-phone" name="contact_phone">
+            </div>
+            <div class="form-group">
+              <label for="client-retainer">Retainer (INR)</label>
+              <input type="number" id="client-retainer" name="retainer_amount" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="client-renewal">Next Renewal Date</label>
+            <input type="date" id="client-renewal" name="renewal_date">
+          </div>
+          <div class="form-group">
+            <label for="client-notes">Internal Notes</label>
+            <textarea id="client-notes" name="notes"></textarea>
+          </div>
+          <div class="form-error-msg hidden" id="client-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Client</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Modal -->
+  <div id="modal-user" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2 id="user-modal-title">Create User Account</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="user-form">
+          <input type="hidden" id="user-form-id" name="id">
+          <div class="form-group">
+            <label for="user-name">Display Name *</label>
+            <input type="text" id="user-name" name="name" required placeholder="Full Name">
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="user-username">Username *</label>
+              <input type="text" id="user-username" name="username" required placeholder="Login handle">
+            </div>
+            <div class="form-group">
+              <label for="user-role">Role *</label>
+              <select id="user-role" name="role" required>
+                <option value="member">Member</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="user-password" id="lbl-user-password">Password *</label>
+            <input type="password" id="user-password" name="password" required placeholder="Enter password (min 8 chars)">
+            <small class="form-hint hidden" id="hint-password-reset">Leave blank to keep existing password.</small>
+          </div>
+          <div class="form-group">
+            <label for="user-telegram">Telegram Chat ID</label>
+            <input type="text" id="user-telegram" name="telegram_chat_id" placeholder="Optional chat ID">
+          </div>
+          <div class="form-group checkbox-group" id="user-active-container">
+            <label class="toggle-switch">
+              <input type="checkbox" id="user-active" name="active" checked>
+            </label>
+            <span class="checkbox-label">Account Active</span>
+          </div>
+          <div class="form-error-msg hidden" id="user-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Account</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="modal-password" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <div class="modal-content glassmorphic">
+        <header class="modal-header">
+          <h2>Update Password</h2>
+          <button class="btn-close-modal">&times;</button>
+        </header>
+        <form id="password-form">
+          <div class="form-group">
+            <label for="pwd-current">Current Password</label>
+            <input type="password" id="pwd-current" name="currentPassword" required>
+          </div>
+          <div class="form-group">
+            <label for="pwd-new">New Password (min 8 chars)</label>
+            <input type="password" id="pwd-new" name="newPassword" required>
+          </div>
+          <div class="form-error-msg hidden" id="password-form-error"></div>
+          <footer class="modal-footer">
+            <button type="button" class="btn-cancel btn-close-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Update Password</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client CRM Panel Modal -->
+  <div id="modal-crm" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper crm-wrapper">
+      <div class="modal-content glassmorphic crm-panel">
+        <header class="modal-header">
+          <div>
+            <h2 id="crm-client-name" style="font-size:18px;"></h2>
+            <div id="crm-client-meta" style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <button id="crm-edit-btn" class="btn-primary" style="font-size:11px;padding:6px 12px;">Edit Client</button>
+            <button class="btn-close-modal" style="font-size:22px;">&times;</button>
+          </div>
+        </header>
+
+        <!-- Contact bar -->
+        <div id="crm-contact-bar" class="crm-contact-bar"></div>
+
+        <!-- Metrics row -->
+        <div id="crm-metrics" class="crm-metrics-row"></div>
+
+        <!-- Body: tasks left, chart + projects right -->
+        <div class="crm-body">
+          <div>
+            <p class="crm-section-title">Pending Tasks</p>
+            <div id="crm-tasks-list"></div>
+          </div>
+          <div>
+            <p class="crm-section-title">Task Status</p>
+            <div id="crm-task-chart" style="margin-bottom:20px;"></div>
+            <p class="crm-section-title">Projects</p>
+            <div id="crm-projects-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
