@@ -483,6 +483,19 @@ export function handleRecurrence(task) {
   }
 }
 
+export function getWorkload() {
+  return db.prepare(`
+    SELECT u.id, u.name, u.role,
+      COUNT(CASE WHEN t.status != 'done' THEN 1 END) as open_count,
+      COUNT(CASE WHEN t.status != 'done' AND t.due_date < date('now','localtime') THEN 1 END) as overdue_count
+    FROM users u
+    LEFT JOIN tasks t ON t.assignee_id = u.id
+    WHERE u.active = 1
+    GROUP BY u.id, u.name, u.role
+    ORDER BY open_count DESC, u.name ASC
+  `).all();
+}
+
 async function triggerAssignmentNotification(taskId) {
   try {
     const task = db.prepare(`

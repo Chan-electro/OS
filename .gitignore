@@ -15,3 +15,8 @@ data/*.db-wal
 # Tooling and IDE files
 .omc/
 .remember/
+
+# Generated files and reports
+*.pdf
+reports/
+

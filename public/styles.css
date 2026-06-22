@@ -1550,6 +1550,88 @@ textarea {
   margin-top: 3px;
 }
 
+/* --- Invoices / Agreements --- */
+.invoice-total-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+.invoice-item-row {
+  display: grid;
+  grid-template-columns: 2fr 60px 90px auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.invoice-item-row input { font-size: 12px; }
+.badge-draft    { background: #f3f4f6; color: #374151; }
+.badge-sent     { background: var(--color-blue-bg); color: var(--color-blue); }
+.badge-paid     { background: var(--color-green-bg); color: var(--color-green); }
+.badge-overdue  { background: var(--color-red-bg); color: var(--color-red); }
+.badge-signed   { background: var(--color-green-bg); color: var(--color-green); }
+
+/* --- Reports Screen --- */
+.report-gen-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+}
+.report-gen-status {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.report-gen-status.success { background: var(--color-green-bg); color: var(--color-green); }
+.report-gen-status.error   { background: var(--color-red-bg);   color: var(--color-red); }
+.report-gen-status.loading { background: var(--bg-surface);     color: var(--text-muted); }
+
+.saved-report-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+  gap: 12px;
+}
+.saved-report-item:last-child { border-bottom: none; }
+.saved-report-info { flex: 1; min-width: 0; }
+.saved-report-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.saved-report-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* --- Team Workload --- */
+.workload-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.workload-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  min-width: 130px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.workload-card:hover { background: var(--bg-surface); }
+.workload-card.has-overdue { border-color: var(--color-red); }
+.workload-card.active-filter { background: var(--bg-surface); border-color: var(--color-blue); }
+.workload-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.workload-role { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 1px; }
+.workload-counts { display: flex; gap: 8px; margin-top: 6px; font-size: 12px; font-weight: 600; }
+.workload-open { color: var(--color-blue); }
+.workload-overdue { color: var(--color-red); }
+.workload-clear { font-size: 11px; color: var(--text-muted); cursor: pointer; margin-left: auto; align-self: center; text-decoration: underline; }
+
 /* --- Mobile --- */
 
 @media (max-width: 768px) {

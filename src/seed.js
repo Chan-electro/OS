@@ -34,6 +34,8 @@ async function seed() {
     db.prepare('DELETE FROM life_habit_logs').run();
     db.prepare('DELETE FROM life_habits').run();
     db.prepare('DELETE FROM content_calendar').run();
+    db.prepare('DELETE FROM agreements').run();
+    db.prepare('DELETE FROM invoices').run();
     db.prepare('DELETE FROM tasks').run();
     db.prepare('DELETE FROM projects').run();
     db.prepare('DELETE FROM clients').run();
@@ -42,8 +44,9 @@ async function seed() {
     // Reset autoincrement sequences
     const tables = [
       'users', 'clients', 'projects', 'tasks', 'content_calendar',
-      'life_habits', 'life_habit_logs', 'life_health_logs', 
-      'life_finance_entries', 'life_learning', 'life_journal', 
+      'invoices', 'agreements',
+      'life_habits', 'life_habit_logs', 'life_health_logs',
+      'life_finance_entries', 'life_learning', 'life_journal',
       'life_content_ideas', 'life_calendar_events'
     ];
     for (const t of tables) {

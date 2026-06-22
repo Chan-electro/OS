@@ -241,6 +241,46 @@ export function initSchema() {
         FOREIGN KEY (owner_id) REFERENCES users(id)
       );
     `);
+
+    // Invoices table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS invoices (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        invoice_number TEXT NOT NULL UNIQUE,
+        client_id INTEGER,
+        client_name TEXT,
+        client_address TEXT,
+        items TEXT NOT NULL DEFAULT '[]',
+        tax_rate REAL NOT NULL DEFAULT 0,
+        discount REAL NOT NULL DEFAULT 0,
+        subtotal REAL NOT NULL DEFAULT 0,
+        total REAL NOT NULL DEFAULT 0,
+        status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','sent','paid','overdue')),
+        due_date TEXT,
+        notes TEXT,
+        created_by INTEGER NOT NULL,
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+        FOREIGN KEY (client_id) REFERENCES clients(id),
+        FOREIGN KEY (created_by) REFERENCES users(id)
+      );
+    `);
+
+    // Agreements table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS agreements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        client_id INTEGER,
+        client_name TEXT,
+        content TEXT NOT NULL DEFAULT '{}',
+        status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','sent','signed')),
+        created_by INTEGER NOT NULL,
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+        FOREIGN KEY (client_id) REFERENCES clients(id),
+        FOREIGN KEY (created_by) REFERENCES users(id)
+      );
+    `);
   })();
 }
 

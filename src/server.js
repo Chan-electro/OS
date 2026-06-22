@@ -12,8 +12,15 @@ import taskRoutes from './routes/tasks.js';
 import dashboardRoutes from './routes/dashboard.js';
 import lifeRoutes from './routes/life.js';
 import contentRoutes from './routes/content.js';
+import reportRoutes from './routes/reports.js';
+import invoiceRoutes from './routes/invoices.js';
+import agreementRoutes from './routes/agreements.js';
 import { initCrons } from './cron.js';
 import { AppError } from './services/users.js';
+import { initSchema } from './db.js';
+
+// Run schema migrations on every startup
+initSchema();
 
 dotenv.config();
 
@@ -49,6 +56,9 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/life', lifeRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/invoices', invoiceRoutes);
+app.use('/api/agreements', agreementRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
