@@ -64,6 +64,18 @@
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 14 15"/><path d="M9 2h6"/><path d="M12 2v3"/></svg>
           <span>Timer</span>
         </a>
+        <a href="#invoices" class="nav-link" id="nav-invoices">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span>Invoices</span>
+        </a>
+        <a href="#agreements" class="nav-link" id="nav-agreements">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+          <span>Agreements</span>
+        </a>
+        <a href="#reports" class="nav-link" id="nav-reports">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Reports</span>
+        </a>
       </nav>
       
       <div class="sidebar-footer">
@@ -268,6 +280,11 @@
                 <option value="">All</option>
               </select>
             </div>
+          </div>
+
+          <div id="team-workload-panel" class="card-section glassmorphic hidden">
+            <h3 class="section-title">Team Workload</h3>
+            <div id="team-workload-grid" class="workload-grid"></div>
           </div>
 
           <div class="card-section glassmorphic">
@@ -708,12 +725,277 @@
           </div>
         </section>
 
+        <!-- Invoices Screen -->
+        <section id="invoices-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Invoices</h1>
+              <p class="welcome-subtitle">Create and manage AdGrades-branded invoices.</p>
+            </div>
+            <button class="btn-primary" onclick="openCreateInvoiceModal()">+ New Invoice</button>
+          </header>
+
+          <div class="workspace-filters glassmorphic">
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-invoice-status" onchange="loadInvoicesWorkspace()">
+                <option value="">All</option>
+                <option value="draft">Draft</option>
+                <option value="sent">Sent</option>
+                <option value="paid">Paid</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Client</label>
+              <select id="filter-invoice-client" onchange="loadInvoicesWorkspace()">
+                <option value="">All</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card-section glassmorphic">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Invoice #</th>
+                    <th>Client</th>
+                    <th>Total</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="invoices-table-body"></tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="invoices-pagination"></div>
+          </div>
+        </section>
+
+        <!-- Agreements Screen -->
+        <section id="agreements-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Agreements</h1>
+              <p class="welcome-subtitle">Service agreements — create, store, and download per client.</p>
+            </div>
+            <button class="btn-primary" onclick="openCreateAgreementModal()">+ New Agreement</button>
+          </header>
+
+          <div class="card-section glassmorphic">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="agreements-table-body"></tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="agreements-pagination"></div>
+          </div>
+        </section>
+
+        <!-- Reports Screen -->
+        <section id="reports-screen" class="screen-content hidden">
+          <header class="screen-header">
+            <div>
+              <h1 class="welcome-title">Client Reports</h1>
+              <p class="welcome-subtitle">Generate monthly PDF reports — saved to host &amp; downloadable.</p>
+            </div>
+          </header>
+
+          <!-- Generator card -->
+          <div class="card-section glassmorphic">
+            <h3 class="section-title">Generate Report</h3>
+            <div class="report-gen-form">
+              <div class="form-group" style="flex:1;min-width:180px;">
+                <label>Client</label>
+                <select id="report-client-select">
+                  <option value="">Select a client…</option>
+                </select>
+              </div>
+              <div class="form-group" style="min-width:160px;">
+                <label>Month</label>
+                <input type="month" id="report-month-input" />
+              </div>
+              <div style="display:flex;align-items:flex-end;">
+                <button class="btn-primary" onclick="generateReport()" id="btn-generate-report">
+                  ↓ Generate &amp; Download PDF
+                </button>
+              </div>
+            </div>
+            <div id="report-gen-status" class="report-gen-status hidden"></div>
+          </div>
+
+          <!-- Saved reports -->
+          <div class="card-section glassmorphic">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 class="section-title" style="margin:0;">Saved Reports</h3>
+              <button class="btn-cancel" onclick="loadSavedReports()" style="font-size:12px;">↺ Refresh</button>
+            </div>
+            <div id="saved-reports-list">
+              <div class="empty-message">No saved reports yet.</div>
+            </div>
+          </div>
+        </section>
+
       </div>
     </main>
   </div>
 
   <!-- --- MODALS --- -->
-  
+
+  <!-- Invoice Modal -->
+  <div id="modal-invoice" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box" style="max-width:640px;">
+      <div class="modal-header">
+        <h2 id="invoice-modal-title" class="modal-title">New Invoice</h2>
+        <button class="modal-close" onclick="closeModal('modal-invoice')">✕</button>
+      </div>
+      <form id="form-invoice" onsubmit="submitInvoiceForm(event)">
+        <input type="hidden" id="invoice-edit-id" value="">
+        <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Invoice Number</label>
+              <input type="text" id="invoice-number" name="invoice_number" placeholder="AG-260001" required>
+            </div>
+            <div class="form-group">
+              <label>Due Date</label>
+              <input type="date" id="invoice-due-date" name="due_date">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:2">
+              <label>Client</label>
+              <select id="invoice-client-select" onchange="invoiceClientSelected(this.value)">
+                <option value="">— Select client —</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label>Client Display Name</label>
+              <input type="text" id="invoice-client-name" name="client_name" placeholder="Business Name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Client Address</label>
+            <textarea id="invoice-client-address" name="client_address" rows="2" placeholder="Full address"></textarea>
+          </div>
+
+          <div style="margin:12px 0 6px;font-weight:700;font-size:13px;">Line Items</div>
+          <div id="invoice-items-container"></div>
+          <button type="button" class="btn-cancel" style="font-size:12px;margin-top:6px;" onclick="addInvoiceItem()">+ Add Item</button>
+
+          <div class="form-row" style="margin-top:12px;">
+            <div class="form-group">
+              <label>Tax Rate (%)</label>
+              <input type="number" id="invoice-tax-rate" name="tax_rate" value="0" min="0" max="100" step="0.5" onchange="updateInvoiceTotals()">
+            </div>
+            <div class="form-group">
+              <label>Discount (₹)</label>
+              <input type="number" id="invoice-discount" name="discount" value="0" min="0" onchange="updateInvoiceTotals()">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="invoice-status" name="status">
+                <option value="draft">Draft</option>
+                <option value="sent">Sent</option>
+                <option value="paid">Paid</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="invoice-total-bar">
+            <span>Total:</span>
+            <span id="invoice-total-display" style="font-weight:800;font-size:18px;">₹0</span>
+          </div>
+
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea id="invoice-notes" name="notes" rows="2" placeholder="Optional notes"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-invoice')">Cancel</button>
+          <button type="submit" class="btn-primary">Save Invoice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Agreement Modal -->
+  <div id="modal-agreement" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box" style="max-width:640px;">
+      <div class="modal-header">
+        <h2 class="modal-title">New Service Agreement</h2>
+        <button class="modal-close" onclick="closeModal('modal-agreement')">✕</button>
+      </div>
+      <form id="form-agreement" onsubmit="submitAgreementForm(event)">
+        <input type="hidden" id="agreement-edit-id" value="">
+        <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
+          <div class="form-row">
+            <div class="form-group" style="flex:2">
+              <label>Client</label>
+              <select id="agreement-client-select" onchange="agreementClientSelected(this.value)">
+                <option value="">— Select client —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="agreement-status" name="status">
+                <option value="draft">Draft</option>
+                <option value="sent">Sent</option>
+                <option value="signed">Signed</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Client Name</label><input type="text" id="agr-client-name" placeholder="Business Name"></div>
+            <div class="form-group"><label>Agreement Date</label><input type="date" id="agr-date" value=""></div>
+          </div>
+          <div class="form-group"><label>Client Address</label><input type="text" id="agr-client-address" placeholder="City, State"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Client Rep Name</label><input type="text" id="agr-rep-name" placeholder="Contact person"></div>
+            <div class="form-group"><label>Rep Designation</label><input type="text" id="agr-rep-desig" placeholder="CEO / Director"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Client Contact</label><input type="text" id="agr-client-contact" placeholder="+91..."></div>
+            <div class="form-group"><label>Start Date</label><input type="date" id="agr-start-date"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Term (months)</label><input type="number" id="agr-term" value="3" min="1" max="24"></div>
+            <div class="form-group"><label>Monthly Fee (₹)</label><input type="number" id="agr-monthly-fee" placeholder="25000"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>First Month Fee (₹)</label><input type="number" id="agr-first-fee" placeholder="25000"></div>
+            <div class="form-group"><label>Total Fee (₹)</label><input type="number" id="agr-total-fee" placeholder="75000"></div>
+          </div>
+          <div class="form-group">
+            <label>Services (one per line)</label>
+            <textarea id="agr-services-text" rows="4" placeholder="Social Media Management&#10;Performance Ads&#10;Video Editing"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-agreement')">Cancel</button>
+          <button type="submit" class="btn-primary">Save Agreement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Project Modal -->
   <div id="modal-project" class="modal hidden">
     <div class="modal-backdrop"></div>

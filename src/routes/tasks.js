@@ -1,6 +1,6 @@
 import express from 'express';
 import { authRequired, roleRequired } from '../auth.js';
-import { createTask, getTaskById, listTasks, updateTask, approveTask, deleteTask } from '../services/tasks.js';
+import { createTask, getTaskById, listTasks, updateTask, approveTask, deleteTask, getWorkload } from '../services/tasks.js';
 
 const router = express.Router();
 
@@ -31,6 +31,14 @@ router.post('/', authRequired, roleRequired(['admin', 'manager']), (req, res, ne
   try {
     const newTask = createTask(req.body, req.user.id);
     res.status(201).json(newTask);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/workload', authRequired, roleRequired(['admin', 'manager']), (req, res, next) => {
+  try {
+    res.json(getWorkload());
   } catch (err) {
     next(err);
   }

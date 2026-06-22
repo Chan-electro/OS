@@ -134,6 +134,9 @@ function loadScreenData(screen) {
     case 'calendar':  loadCalendarWorkspace();  break;
     case 'clock':     loadClockWorkspace();     break;
     case 'timer':     loadTimerWorkspace();     break;
+    case 'invoices':   loadInvoicesWorkspace();   break;
+    case 'agreements': loadAgreementsWorkspace(); break;
+    case 'reports':   loadReportsWorkspace();   break;
   }
 }
 
@@ -454,9 +457,12 @@ async function loadTasksWorkspace() {
   if (assignee_id) query += `&assignee_id=${assignee_id}`;
 
   try {
-    const res = await fetch(query);
-    if (!res.ok) throw new Error('Tasks fetch failed');
-    const result = await res.json();
+    const [tasksRes] = await Promise.all([
+      fetch(query),
+      loadTeamWorkload(assignee_id)
+    ]);
+    if (!tasksRes.ok) throw new Error('Tasks fetch failed');
+    const result = await tasksRes.json();
     renderTasksTable(result.data);
     renderPagination('tasks-pagination', result.total, tasksPage, tasksPageSize, (newPage) => {
       tasksPage = newPage;
@@ -465,6 +471,37 @@ async function loadTasksWorkspace() {
   } catch (err) {
     console.error(err);
   }
+}
+
+async function loadTeamWorkload(activeAssigneeId = '') {
+  const panel = document.getElementById('team-workload-panel');
+  if (!panel) return;
+  try {
+    const res = await fetch('/api/tasks/workload');
+    if (!res.ok) { panel.classList.add('hidden'); return; }
+    const users = await res.json();
+    panel.classList.remove('hidden');
+    const activeId = activeAssigneeId ? String(activeAssigneeId) : '';
+    document.getElementById('team-workload-grid').innerHTML =
+      users.map(u => `
+        <div class="workload-card ${u.overdue_count > 0 ? 'has-overdue' : ''} ${activeId === String(u.id) ? 'active-filter' : ''}"
+             onclick="filterByAssignee(${u.id})">
+          <div class="workload-name">${escapeHTML(u.name)}</div>
+          <div class="workload-role">${u.role}</div>
+          <div class="workload-counts">
+            <span class="workload-open">${u.open_count} open</span>
+            ${u.overdue_count > 0 ? `<span class="workload-overdue">${u.overdue_count} overdue</span>` : ''}
+          </div>
+        </div>`).join('') +
+      (activeId ? `<span class="workload-clear" onclick="filterByAssignee('')">Clear filter</span>` : '');
+  } catch (_) {
+    panel.classList.add('hidden');
+  }
+}
+
+function filterByAssignee(userId) {
+  const el = document.getElementById('filter-task-assignee');
+  if (el) { el.value = userId; tasksPage = 1; loadTasksWorkspace(); }
 }
 
 function renderTasksTable(tasks) {
@@ -2431,4 +2468,451 @@ function renderTimerLog() {
         <div class="timer-log-meta">Session #${timerLogs.length - i} &nbsp;·&nbsp; Ended ${log.endedAt}</div>
       </div>`;
   }).join('');
+}
+
+// ============================================================
+// INVOICES
+// ============================================================
+let invoicesPage = 1;
+const invoicesPageSize = 20;
+
+async function loadInvoicesWorkspace() {
+  const status    = document.getElementById('filter-invoice-status')?.value || '';
+  const client_id = document.getElementById('filter-invoice-client')?.value || '';
+
+  // Populate client filter once
+  const clientSel = document.getElementById('filter-invoice-client');
+  if (clientSel && clientSel.options.length <= 1) {
+    try {
+      const cr = await fetch('/api/clients?pageSize=200');
+      if (cr.ok) {
+        const cd = await cr.json();
+        (cd.data || []).forEach(c => {
+          const o = document.createElement('option');
+          o.value = c.id; o.textContent = c.name;
+          clientSel.appendChild(o);
+        });
+      }
+    } catch (_) {}
+  }
+
+  let q = `/api/invoices?page=${invoicesPage}&pageSize=${invoicesPageSize}`;
+  if (status)    q += `&status=${status}`;
+  if (client_id) q += `&client_id=${client_id}`;
+
+  try {
+    const res = await fetch(q);
+    if (!res.ok) throw new Error();
+    const result = await res.json();
+    renderInvoicesTable(result.data);
+    renderPagination('invoices-pagination', result.total, invoicesPage, invoicesPageSize, p => { invoicesPage = p; loadInvoicesWorkspace(); });
+  } catch (_) {}
+}
+
+function renderInvoicesTable(invoices) {
+  const tbody = document.getElementById('invoices-table-body');
+  if (!tbody) return;
+  if (!invoices.length) { tbody.innerHTML = `<tr><td colspan="6" class="empty-message">No invoices yet.</td></tr>`; return; }
+  tbody.innerHTML = invoices.map(inv => {
+    const statusBadge = `<span class="badge badge-${inv.status}">${inv.status}</span>`;
+    return `<tr>
+      <td><span class="data-table-title">${escapeHTML(inv.invoice_number)}</span></td>
+      <td>${escapeHTML(inv.client_name || inv.client_display_name || 'Internal')}</td>
+      <td style="font-weight:700;">₹${Number(inv.total).toLocaleString('en-IN')}</td>
+      <td>${inv.due_date || '—'}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <div class="action-buttons">
+          <button class="btn-icon" onclick="previewInvoice(${inv.id})" title="Print/PDF">🖨</button>
+          <button class="btn-icon" onclick="openEditInvoiceModal(${inv.id})" title="Edit">✏️</button>
+          <button class="btn-icon delete" onclick="deleteInvoiceAction(${inv.id})" title="Delete">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function previewInvoice(id) {
+  window.open(`/api/invoices/${id}/preview`, '_blank');
+}
+
+async function openCreateInvoiceModal() {
+  document.getElementById('invoice-modal-title').textContent = 'New Invoice';
+  document.getElementById('invoice-edit-id').value = '';
+  document.getElementById('form-invoice').reset();
+  document.getElementById('invoice-items-container').innerHTML = '';
+  addInvoiceItem();
+  updateInvoiceTotals();
+
+  // Set next invoice number
+  try {
+    const r = await fetch('/api/invoices/next-number');
+    if (r.ok) { const d = await r.json(); document.getElementById('invoice-number').value = d.nextNumber; }
+  } catch (_) {}
+
+  await populateInvoiceClientDropdown();
+  openModal('modal-invoice');
+}
+
+async function openEditInvoiceModal(id) {
+  try {
+    const res = await fetch(`/api/invoices/${id}`);
+    if (!res.ok) return;
+    const inv = await res.json();
+    document.getElementById('invoice-modal-title').textContent = 'Edit Invoice';
+    document.getElementById('invoice-edit-id').value = inv.id;
+    document.getElementById('invoice-number').value = inv.invoice_number;
+    document.getElementById('invoice-due-date').value = inv.due_date || '';
+    document.getElementById('invoice-client-name').value = inv.client_name || '';
+    document.getElementById('invoice-client-address').value = inv.client_address || '';
+    document.getElementById('invoice-tax-rate').value = inv.tax_rate;
+    document.getElementById('invoice-discount').value = inv.discount;
+    document.getElementById('invoice-status').value = inv.status;
+    document.getElementById('invoice-notes').value = inv.notes || '';
+    document.getElementById('invoice-items-container').innerHTML = '';
+    (inv.items || []).forEach(item => addInvoiceItem(item));
+    updateInvoiceTotals();
+    await populateInvoiceClientDropdown(inv.client_id);
+    openModal('modal-invoice');
+  } catch (_) {}
+}
+
+async function populateInvoiceClientDropdown(selectedId = '') {
+  const sel = document.getElementById('invoice-client-select');
+  sel.innerHTML = '<option value="">— Select client —</option>';
+  try {
+    const r = await fetch('/api/clients?pageSize=200');
+    if (r.ok) {
+      const d = await r.json();
+      (d.data || []).forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id; o.textContent = c.name;
+        if (String(c.id) === String(selectedId)) o.selected = true;
+        sel.appendChild(o);
+      });
+    }
+  } catch (_) {}
+}
+
+function invoiceClientSelected(clientId) {
+  if (!clientId) return;
+  fetch(`/api/clients/${clientId}`)
+    .then(r => r.ok ? r.json() : null)
+    .then(c => {
+      if (!c) return;
+      document.getElementById('invoice-client-name').value = c.name || '';
+      document.getElementById('invoice-client-address').value = c.contact_email || '';
+    }).catch(() => {});
+}
+
+let invoiceItemIdx = 0;
+function addInvoiceItem(item = {}) {
+  const idx = invoiceItemIdx++;
+  const div = document.createElement('div');
+  div.className = 'invoice-item-row';
+  div.id = `inv-item-${idx}`;
+  div.innerHTML = `
+    <input type="text" placeholder="Description" value="${escapeHTML(item.description||'')}" oninput="updateInvoiceTotals()" data-field="desc" class="inv-item-desc">
+    <input type="number" placeholder="Qty" value="${item.quantity||1}" min="1" oninput="updateInvoiceTotals()" data-field="qty" class="inv-item-qty">
+    <input type="number" placeholder="Rate ₹" value="${item.rate||0}" min="0" oninput="updateInvoiceTotals()" data-field="rate" class="inv-item-rate">
+    <button type="button" onclick="this.closest('.invoice-item-row').remove();updateInvoiceTotals();" style="color:var(--color-red);background:none;border:none;cursor:pointer;font-size:16px;">✕</button>
+  `;
+  document.getElementById('invoice-items-container').appendChild(div);
+  updateInvoiceTotals();
+}
+
+function getInvoiceItems() {
+  return Array.from(document.querySelectorAll('.invoice-item-row')).map(row => ({
+    description: row.querySelector('.inv-item-desc')?.value || '',
+    quantity:    Number(row.querySelector('.inv-item-qty')?.value  || 1),
+    rate:        Number(row.querySelector('.inv-item-rate')?.value || 0)
+  }));
+}
+
+function updateInvoiceTotals() {
+  const items    = getInvoiceItems();
+  const taxRate  = Number(document.getElementById('invoice-tax-rate')?.value  || 0);
+  const discount = Number(document.getElementById('invoice-discount')?.value   || 0);
+  const subtotal = items.reduce((s, i) => s + i.quantity * i.rate, 0);
+  const tax      = subtotal * (taxRate / 100);
+  const total    = subtotal + tax - discount;
+  const el = document.getElementById('invoice-total-display');
+  if (el) el.textContent = `₹${total.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+}
+
+async function submitInvoiceForm(e) {
+  e.preventDefault();
+  const editId = document.getElementById('invoice-edit-id').value;
+  const items  = getInvoiceItems();
+  const payload = {
+    invoice_number: document.getElementById('invoice-number').value,
+    client_id:      document.getElementById('invoice-client-select').value ? parseInt(document.getElementById('invoice-client-select').value) : null,
+    client_name:    document.getElementById('invoice-client-name').value,
+    client_address: document.getElementById('invoice-client-address').value,
+    items,
+    tax_rate:  Number(document.getElementById('invoice-tax-rate').value),
+    discount:  Number(document.getElementById('invoice-discount').value),
+    status:    document.getElementById('invoice-status').value,
+    due_date:  document.getElementById('invoice-due-date').value || null,
+    notes:     document.getElementById('invoice-notes').value
+  };
+
+  const url    = editId ? `/api/invoices/${editId}` : '/api/invoices';
+  const method = editId ? 'PATCH' : 'POST';
+
+  try {
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (!res.ok) { const err = await res.json(); showToast(err?.error?.message || 'Failed to save invoice.', 'error'); return; }
+    closeModal('modal-invoice');
+    showToast('Invoice saved.', 'success');
+    loadInvoicesWorkspace();
+  } catch (_) { showToast('Network error.', 'error'); }
+}
+
+async function deleteInvoiceAction(id) {
+  if (!confirm('Delete this invoice?')) return;
+  try {
+    await fetch(`/api/invoices/${id}`, { method: 'DELETE' });
+    loadInvoicesWorkspace();
+  } catch (_) {}
+}
+
+// ============================================================
+// AGREEMENTS
+// ============================================================
+let agreementsPage = 1;
+const agreementsPageSize = 20;
+
+async function loadAgreementsWorkspace() {
+  try {
+    const res = await fetch(`/api/agreements?page=${agreementsPage}&pageSize=${agreementsPageSize}`);
+    if (!res.ok) throw new Error();
+    const result = await res.json();
+    renderAgreementsTable(result.data);
+    renderPagination('agreements-pagination', result.total, agreementsPage, agreementsPageSize, p => { agreementsPage = p; loadAgreementsWorkspace(); });
+  } catch (_) {}
+}
+
+function renderAgreementsTable(agreements) {
+  const tbody = document.getElementById('agreements-table-body');
+  if (!tbody) return;
+  if (!agreements.length) { tbody.innerHTML = `<tr><td colspan="5" class="empty-message">No agreements yet.</td></tr>`; return; }
+  tbody.innerHTML = agreements.map(agr => {
+    const date = agr.created_at ? new Date(agr.created_at).toLocaleDateString('en-IN') : '—';
+    return `<tr>
+      <td style="font-size:11px;color:var(--text-muted);">#${agr.id}</td>
+      <td><span class="data-table-title">${escapeHTML(agr.client_name || agr.client_display_name || 'Unknown')}</span></td>
+      <td><span class="badge badge-${agr.status}">${agr.status}</span></td>
+      <td>${date}</td>
+      <td>
+        <div class="action-buttons">
+          <button class="btn-icon" onclick="previewAgreement(${agr.id})" title="View/Print">🖨</button>
+          <button class="btn-icon" onclick="updateAgreementStatus(${agr.id}, '${agr.status}')" title="Update Status">✏️</button>
+          <button class="btn-icon delete" onclick="deleteAgreementAction(${agr.id})" title="Delete">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function previewAgreement(id) {
+  window.open(`/api/agreements/${id}/preview`, '_blank');
+}
+
+async function openCreateAgreementModal() {
+  document.getElementById('agreement-edit-id').value = '';
+  document.getElementById('form-agreement').reset();
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+  document.getElementById('agr-date').value = today;
+
+  const sel = document.getElementById('agreement-client-select');
+  sel.innerHTML = '<option value="">— Select client —</option>';
+  try {
+    const r = await fetch('/api/clients?pageSize=200');
+    if (r.ok) {
+      const d = await r.json();
+      (d.data || []).forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id; o.textContent = c.name; sel.appendChild(o);
+      });
+    }
+  } catch (_) {}
+  openModal('modal-agreement');
+}
+
+function agreementClientSelected(clientId) {
+  if (!clientId) return;
+  fetch(`/api/clients/${clientId}`)
+    .then(r => r.ok ? r.json() : null)
+    .then(c => {
+      if (!c) return;
+      document.getElementById('agr-client-name').value = c.name || '';
+      if (c.contact_name) document.getElementById('agr-rep-name').value = c.contact_name;
+    }).catch(() => {});
+}
+
+async function submitAgreementForm(e) {
+  e.preventDefault();
+  const editId = document.getElementById('agreement-edit-id').value;
+  const servicesRaw = document.getElementById('agr-services-text').value;
+  const customServices = servicesRaw.split('\n').filter(s => s.trim()).map(s => ({ title: s.trim() }));
+
+  const formData = {
+    clientName:           document.getElementById('agr-client-name').value,
+    clientAddress:        document.getElementById('agr-client-address').value,
+    clientRepName:        document.getElementById('agr-rep-name').value,
+    clientRepDesignation: document.getElementById('agr-rep-desig').value,
+    clientContact:        document.getElementById('agr-client-contact').value,
+    agreementDate:        document.getElementById('agr-date').value,
+    commencementDate:     document.getElementById('agr-start-date').value,
+    termMonths:           document.getElementById('agr-term').value,
+    firstMonthFee:        document.getElementById('agr-first-fee').value,
+    totalFee:             document.getElementById('agr-total-fee').value,
+  };
+
+  const payload = {
+    client_id:   document.getElementById('agreement-client-select').value ? parseInt(document.getElementById('agreement-client-select').value) : null,
+    client_name: formData.clientName,
+    status:      document.getElementById('agreement-status').value,
+    content:     { formData, selectedServices: [], customServices }
+  };
+
+  const url    = editId ? `/api/agreements/${editId}` : '/api/agreements';
+  const method = editId ? 'PATCH' : 'POST';
+
+  try {
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (!res.ok) { const err = await res.json(); showToast(err?.error?.message || 'Failed.', 'error'); return; }
+    const created = await res.json();
+    closeModal('modal-agreement');
+    showToast('Agreement saved. Opening preview…', 'success');
+    loadAgreementsWorkspace();
+    setTimeout(() => previewAgreement(created.id), 600);
+  } catch (_) { showToast('Network error.', 'error'); }
+}
+
+async function updateAgreementStatus(id, currentStatus) {
+  const statuses = ['draft', 'sent', 'signed'];
+  const next = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
+  if (!confirm(`Mark agreement #${id} as "${next}"?`)) return;
+  try {
+    await fetch(`/api/agreements/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: next }) });
+    loadAgreementsWorkspace();
+  } catch (_) {}
+}
+
+async function deleteAgreementAction(id) {
+  if (!confirm('Delete this agreement?')) return;
+  try {
+    await fetch(`/api/agreements/${id}`, { method: 'DELETE' });
+    loadAgreementsWorkspace();
+  } catch (_) {}
+}
+
+// ============================================================
+// REPORTS
+// ============================================================
+async function loadReportsWorkspace() {
+  // Set default month to current month
+  const monthInput = document.getElementById('report-month-input');
+  if (monthInput && !monthInput.value) {
+    monthInput.value = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }).slice(0, 7);
+  }
+
+  // Populate client dropdown
+  try {
+    const res = await fetch('/api/clients?pageSize=200');
+    if (res.ok) {
+      const data = await res.json();
+      const sel = document.getElementById('report-client-select');
+      const current = sel.value;
+      sel.innerHTML = '<option value="">Select a client…</option>' +
+        (data.data || []).map(c =>
+          `<option value="${c.id}" ${String(c.id) === current ? 'selected' : ''}>${escapeHTML(c.name)}</option>`
+        ).join('');
+    }
+  } catch (_) {}
+
+  loadSavedReports();
+}
+
+async function generateReport() {
+  const clientId = document.getElementById('report-client-select').value;
+  const month    = document.getElementById('report-month-input').value;
+  const status   = document.getElementById('report-gen-status');
+
+  if (!clientId) { showReportStatus('Please select a client.', 'error'); return; }
+  if (!month)    { showReportStatus('Please pick a month.', 'error'); return; }
+
+  const btn = document.getElementById('btn-generate-report');
+  btn.disabled = true;
+  showReportStatus('Generating PDF… this may take a moment.', 'loading');
+
+  try {
+    const res = await fetch(`/api/reports/client/${clientId}?month=${month}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showReportStatus(err?.error?.message || 'Failed to generate report.', 'error');
+      return;
+    }
+    // Trigger browser download
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = res.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] || `report_${month}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    showReportStatus(`Report generated and saved to host. Download starting…`, 'success');
+    loadSavedReports();
+  } catch (err) {
+    showReportStatus('Network error generating report.', 'error');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function showReportStatus(msg, type) {
+  const el = document.getElementById('report-gen-status');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `report-gen-status ${type}`;
+  el.classList.remove('hidden');
+  if (type === 'success') setTimeout(() => el.classList.add('hidden'), 5000);
+}
+
+async function loadSavedReports() {
+  const container = document.getElementById('saved-reports-list');
+  if (!container) return;
+  try {
+    const res = await fetch('/api/reports/saved');
+    if (!res.ok) { container.innerHTML = '<div class="empty-message">Could not load saved reports.</div>'; return; }
+    const files = await res.json();
+    if (files.length === 0) {
+      container.innerHTML = '<div class="empty-message">No saved reports yet. Generate your first report above.</div>';
+      return;
+    }
+    container.innerHTML = files.map(f => {
+      const displayName = f.filename.replace(/_/g, ' ').replace('.pdf', '');
+      const monthLabel  = (() => {
+        const [yr, mo] = f.month.split('-');
+        return new Date(parseInt(yr), parseInt(mo) - 1, 1)
+          .toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+      })();
+      return `
+        <div class="saved-report-item">
+          <div class="saved-report-info">
+            <div class="saved-report-name">${escapeHTML(displayName)}</div>
+            <div class="saved-report-meta">${monthLabel} &nbsp;·&nbsp; ${f.sizeKb} KB &nbsp;·&nbsp; ${f.generatedAt}</div>
+          </div>
+          <a href="${f.downloadUrl}" class="btn-cancel" style="font-size:12px;white-space:nowrap;" download>↓ Download</a>
+        </div>`;
+    }).join('');
+  } catch (_) {
+    container.innerHTML = '<div class="empty-message">Error loading saved reports.</div>';
+  }
 }
